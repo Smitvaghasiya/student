@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<script type="text/javascript">
+		
+		$(document).ready(function(){
+
+			allStudent();
+
+
+			$('.btn1').click(function(){
+				insert($('.studentName').val())
+
+			});
+
+			/*$('.delete').click(function(){
+				id = $(this).parent();
+				deleteStudent(id);
+			});*/
+
+			$('#studentData').on('click','.delete',function(){
+				/*id = $(this).children().first().text()
+				console.log(id)
+				deleteStudent(id)*/
+				id = $(this).parent().children().first().text();
+				console.log(id)
+				deleteStudent(id)
+			})
+
+		});
+
+		function allStudent() {
+			$.ajax({
+				url : "https://arjunbala.com/DemoAPI/getAllStudents.php",
+				
+				type : "POST",
+				dataType : "json"
+			}).done(function(json){
+				$.each(json,function(i,value){
+					temp = '<tr><td>'+value.StudentID+'</td><td>'+value.StudentName+'</td><td class="edit"><button class="btn btn-outline-warning"> Edit <i class="fas fa-pencil-alt"></i></button></td><td class="delete"><button class="btn btn-outline-danger"> Delete <i class="fas fa-pencil-alt"></i></button></td></tr>'
+					$('#studentData').append(temp)
+				})
+			});
+		}
+
+		function insert(studentName){
+			$.ajax({
+				url : "https://arjunbala.com/DemoAPI/insertStudent.php",
+				data : {
+					StudentName : studentName
+				},
+				type : "POST",
+				dataType : "json"
+			}).done(function(json){
+				$('#studentData').text('');
+				allStudent();
+			});
+		}
+
+		function deleteStudent(SID){
+			
+			$.ajax({
+				url:"https://arjunbala.com/DemoAPI/deleteStudent.php",
+				data:{
+					StudentID:SID
+				},
+				type:"POST",
+				dataType:"html"
+			}).done(function(json){
+				$('#studentData').text('');
+				allStudent();
+			});
+		}
+
+	</script>
+
+</head>
+<body>
+	<div>
+		<table align="center" class="tbl1  mt-3 " >
+			<tr>
+				<td>Enter Student Name</td>
+				<td>:</td>
+				<td><input type="" class="form-control studentName"></td>
+			</tr>
+			
+			<tr>
+				<td colspan="3" align="center"><input type="button" value="Submit" class="btn btn-outline-primary mt-2 btn1 " ></td>
+			</tr>
+		</table>
+	</div>
+	<div class="pt-3"> 
+		<table id="studentData" border="2" align="center" >
+			
+		</table>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
